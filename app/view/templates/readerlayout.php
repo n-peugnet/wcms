@@ -2,7 +2,7 @@
 <html>
 <head>
 
-    <?=$this->section('head')?>test
+    <?=$this->section('head')?>
 
 
 </head>
