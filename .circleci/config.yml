@@ -59,7 +59,7 @@ jobs:
 
       # run PHPStan with reviewdog
       - run: curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b ./bin
-      - run: ./vendor/bin/phpstan analyse src -l 0 --no-progress --error-format=raw | ./bin/reviewdog -f=phpstan -reporter=github-pr-check
+      - run: ./vendor/bin/phpstan analyse app -l 0 --no-progress --error-format=raw | ./bin/reviewdog -f=phpstan -reporter=github-pr-check
       # or
       #- run: ./vendor/bin/phpstan analyse src -l 0 --no-progress --error-format=raw | ./bin/reviewdog -f=phpstan -reporter=github-pr-review
 
