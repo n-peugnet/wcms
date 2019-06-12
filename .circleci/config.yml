@@ -41,18 +41,15 @@ jobs:
       #- run: ./vendor/bin/codecept build
       #- run: ./vendor/bin/codecept run
 
-  phpstan:
+  lint:
     executor: standard
     steps:
       - checkout
-      - run: sudo docker-php-ext-install zip
 
       # Download and cache dependencies
       - restore_cache:
           keys:
-            # "composer.lock" can be used if it is committed to the repo
             - v1-dependencies-{{ checksum "composer.json" }}
-            # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
       - run: composer install -n --prefer-dist
       - save_cache:
@@ -60,14 +57,15 @@ jobs:
           paths:
             - ./vendor
 
-      # run tests with phpunit or codecept
-      #- run: ./vendor/bin/phpunit
-      #- run: ./vendor/bin/codecept build
-      #- run: ./vendor/bin/codecept run
+      # run PHPStan with reviewdog
+      - run: curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b ./bin
+      - run: ./vendor/bin/phpstan analyse src -l 0 --no-progress --error-format=raw | ./bin/reviewdog -f=phpstan -reporter=github-pr-check
+      # or
+      #- run: ./vendor/bin/phpstan analyse src -l 0 --no-progress --error-format=raw | ./bin/reviewdog -f=phpstan -reporter=github-pr-review
 
 workflows:
   version: 2
   full:
     jobs:
       - test
-      - phpstan
+      - lint
