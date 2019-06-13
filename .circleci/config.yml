@@ -57,17 +57,18 @@ jobs:
           paths:
             - ./vendor
 
-      # run PHPStan with reviewdog
+      # install review dog
       - run: curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b ./bin
+
+      # run PHPStan with reviewdog
       - run: ./vendor/bin/phpstan analyse app -l 0 --no-progress --error-format=raw 2>&1 | ./bin/reviewdog -f=phpstan -reporter=github-pr-check || true
-      # or
-      #- run: ./vendor/bin/phpstan analyse src -l 0 --no-progress --error-format=raw | ./bin/reviewdog -f=phpstan -reporter=github-pr-review
+
+      # run PHPCS with reviewdog
+      - run: './vendor/bin/phpcs app -n --report=checkstyle 2>&1 | ./bin/reviewdog -f=checkstyle -reporter=github-pr-check || true'
 
 workflows:
   version: 2
-  test:
+  phpunit:
     jobs:
       - test
-  lint:
-    jobs:
       - lint
