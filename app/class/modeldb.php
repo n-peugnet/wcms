@@ -27,6 +27,7 @@ class Modeldb extends Model
 		$list = $this->artstore->findAll();
 		foreach ($list as $artdata) {
 			$artlist[$artdata->id] = new Art2($artdata);
+			$test=true;
 		}
 		return $artlist;
 	}
