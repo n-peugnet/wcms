@@ -32,6 +32,6 @@
         Include slevomat conding standard
     -->
     <config name="installed_paths" value="../../slevomat/coding-standard"/>
-    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration" />
+    <!-- <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration" /> -->
 
 </ruleset>
