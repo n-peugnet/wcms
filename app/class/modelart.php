@@ -54,6 +54,8 @@ class Modelart extends Modeldb
 		if (is_string($id)) {
 			$artdata = $this->repo->findById($id);
 			if ($artdata !== false) {
+				$test= "prout";
+				
 				return new Art2($artdata);
 			} else {
 				return false;
