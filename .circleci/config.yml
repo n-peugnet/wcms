@@ -16,18 +16,11 @@ executors:
       #
       # - image: redis:2.8.19
 
-<<<<<<< HEAD
 jobs:
   test:
     executor: standard
     steps:
       - checkout
-=======
-    steps:
-      - checkout
-
-      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
->>>>>>> master
       - run: sudo docker-php-ext-install zip
 
       # Download and cache dependencies
@@ -37,13 +30,7 @@ jobs:
             - v1-dependencies-{{ checksum "composer.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-<<<<<<< HEAD
       - run: composer install -n --prefer-dist
-=======
-
-      - run: composer install -n --prefer-dist
-
->>>>>>> master
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.json" }}
           paths:
@@ -51,7 +38,6 @@ jobs:
 
       # run tests with phpunit or codecept
       #- run: ./vendor/bin/phpunit
-<<<<<<< HEAD
       #- run: ./vendor/bin/codecept build
       #- run: ./vendor/bin/codecept run
 
@@ -86,7 +72,3 @@ workflows:
     jobs:
       - test
       - lint
-=======
-      - run: ./vendor/bin/codecept build
-      - run: ./vendor/bin/codecept run
->>>>>>> master
