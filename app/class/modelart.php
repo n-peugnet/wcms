@@ -55,9 +55,9 @@ class Modelart extends Modeldb
 			$artdata = $this->repo->findById($id);
 			if ($artdata !== false) {
 				$test= "prout"; $salut = "ok";
-	if ($test){
-		echo "bon là quand même il devrait me dire que ça va pas";
-	}
+    if ($test){
+        echo "bon là quand même il devrait me dire que ça va pas";
+    }
 				
 				return new Art2($artdata);
 			} else {
