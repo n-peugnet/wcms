@@ -29,4 +29,6 @@
     </rule>
     <rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
 
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration" />
+
 </ruleset>
