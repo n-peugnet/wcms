@@ -5,8 +5,7 @@
     <!--
         Default file or directory to sniff.
     -->
-    <file>./src</file>
-    <file>./tests</file>
+    <file>./app</file>
 
     <!--
         Include all sniffs in the PSR12 standard. Note that the
@@ -29,6 +28,10 @@
     </rule>
     <rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
 
+    <!--
+        Include slevomat conding standard
+    -->
+    <config name="installed_paths" value="../../slevomat/coding-standard"/>
     <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration" />
 
 </ruleset>
