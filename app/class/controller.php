@@ -2,16 +2,27 @@
 
 class Controller
 {
-
+    /**
+     * @var User
+     */
     protected $user;
+    /**
+     * @var Routes
+     */
     protected $router;
+    /**
+     * @var Modeluser
+     */
     protected $usermanager;
     protected $plates;
+    /** @var DateTimeImmutable */
+    protected $now;
 
 	public function __construct($router) {
         $this->setuser();
         $this->router = $router;        
         $this->initplates();
+        $this->now = new DateTimeImmutable(null, timezone_open("Europe/Paris"));
 	}
 
     public function setuser()
@@ -59,6 +70,22 @@ class Controller
     public function routedirect(string $route, array $vars = [])
     {
         $this->redirect($this->router->generate($route, $vars));
+    }
+
+    public function routedirectget(string $route, array $vars = [])
+    {
+        $get = '?';
+        foreach ($vars as $key => $value) {
+            $get .= $key .'='. $value. '&';
+        }
+        $get = rtrim($get, '&');
+        $this->redirect($this->router->generate($route, []) . $get);
+    }
+
+    public function error(int $code)
+    {
+        http_response_code($code);
+        exit;
     }
 
 }

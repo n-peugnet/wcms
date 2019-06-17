@@ -3,38 +3,33 @@
 class Modelmedia extends Model
 {
 
-	public function addmedia(array $file, $maxsize = 2 ** 24, $id)
+
+	public function basedircheck()
 	{
-		$message = 'runing';
-		$id = strtolower(strip_tags($id));
-		$id = str_replace(' ', '_', $id);
-		if (isset($file) and $file['media']['error'] == 0 and $file['media']['size'] < $maxsize) {
-			$infosfichier = pathinfo($file['media']['name']);
-			$extension_upload = $infosfichier['extension'];
-			$extensions_autorisees = $this::MEDIA_EXTENSIONS;
-			if (in_array($extension_upload, $extensions_autorisees)) {
-				if (!file_exists($this::MEDIA_DIR . $id . '.' . $extension_upload)) {
-
-					$extension_upload = strtolower($extension_upload);
-					$uploadok = move_uploaded_file($file['media']['tmp_name'], $this::MEDIA_DIR . $id . '.' . $extension_upload);
-					if ($uploadok) {
-						$message = 'uploadok';
-					} else {
-						$message = 'uploaderror';
-					}
-				} else {
-					$message = 'filealreadyexist';
-
-				}
-			}
+		if(!is_dir(Model::MEDIA_DIR)) {
+			return mkdir(Model::MEDIA_DIR);
 		} else {
-			$message = 'filetoobig';
-
+			return true;
 		}
-
-		return $message;
 	}
 
+	public function favicondircheck()
+	{
+		if(!is_dir(Model::FAVICON_DIR)) {
+			return mkdir(Model::FAVICON_DIR);
+		} else {
+			return true;
+		}
+	}
+
+	public function thumbnaildircheck()
+	{
+		if(!is_dir(Model::THUMBNAIL_DIR)) {
+			return mkdir(Model::THUMBNAIL_DIR);
+		} else {
+			return true;
+		}
+	}
 
 	public function getmedia($entry, $dir)
 	{
@@ -105,7 +100,97 @@ class Modelmedia extends Model
 	}
 
 
+	public function listdir($dir)
+	{
 
+	
+	$result = array(); 
+
+	$cdir = scandir($dir); 
+	$result['dirfilecount'] = 0;
+	foreach ($cdir as $key => $value) 
+	{ 
+		if (!in_array($value,array(".",".."))) 
+		{ 
+			if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) 
+			{ 
+				$result[$value] = $this->listdir($dir . DIRECTORY_SEPARATOR . $value); 
+			} 
+			else 
+			{ 
+				$result['dirfilecount'] ++; 
+			} 
+		} 
+	} 
+	
+	return $result; 
+
+	}
+
+	/**
+	 * Upload single file
+	 * 
+	 * @param string $index The file id
+	 * @param string $destination File final destination
+	 * @param bool|int $maxsize Max file size in octets
+	 * @param bool|array $extensions List of authorized extensions
+	 * @param bool $jpgrename Change the file exentension to .jpg
+	 * 
+	 * @return bool If upload process is a succes or not
+	 */
+	function simpleupload(string $index, string $destination, $maxsize = false, $extensions = false, bool $jpgrename = false) : bool
+	{
+	    //Test1: if the file is corectly uploaded
+		if (!isset($_FILES[$index]) || $_FILES[$index]['error'] > 0) return false;
+	    //Test2: check file size
+		if ($maxsize !== false && $_FILES[$index]['size'] > $maxsize) return false;
+	    //Test3: check extension
+		$ext = substr(strrchr($_FILES[$index]['name'],'.'),1);
+		if ($extensions !== false && !in_array($ext, $extensions)) return false;
+		if($jpgrename !== false) {
+			$destination .= '.jpg';
+		} else {
+			$destination .= '.' . $ext;
+		}
+	    //Move to dir
+		return move_uploaded_file($_FILES[$index]['tmp_name'], $destination);
+	}
+
+	/**
+	 * Upload multiple files
+	 * 
+	 * @param string $index Id of the file input
+	 * @param string $target direction to save the files
+	 */
+	public function multiupload(string $index, string $target)
+	{
+        if($target[strlen($target)-1] != DIRECTORY_SEPARATOR)
+                $target .= DIRECTORY_SEPARATOR;
+            $count=0;
+            foreach ($_FILES[$index]['name'] as $filename) 
+            {
+                $fileinfo = pathinfo($filename);
+                $extension = idclean($fileinfo['extension']);
+                $id = idclean($fileinfo['filename']);
+
+                $tmp=$_FILES['file']['tmp_name'][$count];
+                $count=$count + 1;
+                $temp = $target . $id .'.' .$extension;
+                move_uploaded_file($tmp, $temp);
+                $temp='';
+                $tmp='';
+            }
+	}
+
+	public function adddir($dir, $name)
+	{
+		$newdir = $dir . DIRECTORY_SEPARATOR . $name;
+		if(!is_dir($newdir)) {
+			return mkdir($newdir);
+		} else {
+			return false;
+		}
+	}
 
 }
 

@@ -21,7 +21,7 @@ try {
     $matchoper->match();
 
 } catch (Exception $e) {
-    echo 'Exception reçue : ', $e->getMessage(), "\n";
+    echo '<h1>⚠ Woops ! There is a little problem : </h1>', $e->getMessage(), "\n";
 }
 
 

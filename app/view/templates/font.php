@@ -8,10 +8,13 @@
     <?php $this->insert('backtopbar', ['user' => $user, 'tab' => 'font']) ?>
 
 
-<section class="font">
+<main class="font">
 
+<section>
 
-<h1>Fonts</h1>
+<article>
+
+<h1>Fonts manager</h1>
 
 
 <div>
@@ -20,6 +23,10 @@
 <div>
 <a href="<?= $fontfile ?>" target="_blank">👓 View font CSS file</a>
 </div>
+
+</article>
+
+<article>
 
 <h2>Add Font</h2>
 
@@ -31,6 +38,9 @@
 <input type="submit" value="upload font(s)">
 </form>
 
+</article>
+
+<article>
 
 <h2>Font stock</h2>
 
@@ -55,7 +65,11 @@ foreach ($fontlist as $font ) {
 ?>
 </table>
 
+</article>
+
 </section>
+
+</main>
 </body>
 
 <?php $this->stop('page') ?>

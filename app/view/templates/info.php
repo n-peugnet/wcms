@@ -8,33 +8,10 @@
     <?php $this->insert('backtopbar', ['user' => $user, 'tab' => 'info']) ?>
 
 
-<section class="info">
-
-<h1>Info</h1>
+<main class="info">
 
 
-<ul>
-<li><a href="https://github.com/vincent-peugnet/wcms" target="_blank">🐱‍👤 Github</a></li>
-<li><a href="#manual">📕 Manual</a></li>
-<li><a href="#">🌵 Website</a></li>
-</ul>
-
-<h2>About</h2>
-
-<h3>W-cms was made using these open sources and free components :</h3>
-
-<ul>
-<li><a href="https://github.com/jamesmoss/flywheel" target="_blank">🎡 James Moss's Flywheel Database</a> <i>as json noSQL flatfile database engine</i></li>
-<li><a href="https://github.com/michelf/php-markdown" target="_blank">📝 Michel Fortin's Markdown Extra</a> <i>markdown library</i></li>
-<li><a href="https://github.com/thephpleague/plates" target="_blank">🎨 Plates</a> <i>as templating engine</i></li>
-<li><a href="https://github.com/dannyvankooten/AltoRouter">🐶 Alto Router</a> <i>as router engine</i></li>
-</ul>
-
-<h3>Special thanks to :</h3>
-
-<a href="https://nicolas.club1.fr" target="_blank">🚲 Nicolas Peugnet</a>
-
-
+<section>
 
 
 <nav>
@@ -59,9 +36,40 @@
 </nav>
 
 
-
-
 <article>
+
+<h1>Info</h1>
+
+<h2>Version</h2>
+
+<?= $version ?>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://github.com/vincent-peugnet/wcms" target="_blank">🐱‍👤 Github</a></li>
+<li><a href="#manual">📕 Manual</a></li>
+<li><a href="https://w-cms.top" target="_blank">🌵 Website</a></li>
+</ul>
+
+<h2>About</h2>
+
+<h3>W-cms was made using these open sources and free components :</h3>
+
+<ul>
+<li><a href="https://github.com/jamesmoss/flywheel" target="_blank">🎡 James Moss's Flywheel Database</a> <i>as json noSQL flatfile database engine</i></li>
+<li><a href="https://github.com/michelf/php-markdown" target="_blank">📝 Michel Fortin's Markdown Extra</a> <i>markdown library</i></li>
+<li><a href="https://github.com/thephpleague/plates" target="_blank">🎨 Plates</a> <i>as templating engine</i></li>
+<li><a href="https://github.com/dannyvankooten/AltoRouter">🐶 Alto Router</a> <i>as router engine</i></li>
+</ul>
+
+<h3>Special thanks to :</h3>
+
+<a href="https://nicolas.club1.fr" target="_blank">🚲 Nicolas Peugnet</a>
+
+</article>
+
+<article id="manual">
 
 <h2 id="manual">Manual</h2>
 
@@ -69,9 +77,11 @@
 
 <p>There is'nt a real start of anything when you're using W.</p>
 
+<p>Just type an adress in your web browser, after your W folder. You should see an empty page, not existing yet. You can login to create one at this adress. If you are already logged in, you can juste type <code><i>page_id</i>/add</code>, this will directly create a page at this adress.</p>
 
+<p>This <code><i>page_id</i></code> is the identifier of each page, you cant change it later, this is like a real solid adress, it cant move. It can only contain lowercase letters, numbers, hyphens or underscore charachters.</p>
 
-
+<p>No visitor can see the full list of pages you've created. The only way to see the whole map of your project, is to be conected at least as an editor, and go to the "homepage", the root adress where W is instaled.</p>
 
 <h3 id="structure">Structure</h3>
 
@@ -136,7 +146,7 @@
 <li>header</li>
 <li>nav</li>
 <li>aside</li>
-<li>section</li>
+<li>main</li>
 <li>footer</li>
 </ul>
 
@@ -201,7 +211,7 @@ You can use any of them, only one or all at the same time, as you prefer.
 <p>You can create a html list of links pointing to all the pages using this tag.</p>
 
 <blockquote>
-    %%<i>tag</i>%%
+    %TAG:<i>__tag__</i>%
 </blockquote>
 
 <p>Let's suppose we are in page3 and we have page2, page3, page5, using this tag, this will output :</p>
@@ -265,7 +275,7 @@ You can use any of them, only one or all at the same time, as you prefer.
 <p>As it is too long adding all media of a folder one by one, you can just print the content of an entire folder using this method.</p>
 
 <blockquote>
-%MEDIA:<i>__repository__</i>
+%MEDIA:<i>__directory__</i>
 </blockquote>
 
 <p>Just point to the good directory inside the media folder. This will output html list, creating image elements, audio players, video players, or just basic link, depending on the media type.</p>
@@ -293,7 +303,7 @@ You can use any of them, only one or all at the same time, as you prefer.
 %ASIDE%
 </br>
 </br>
-%SECTION%
+%MAIN%
 </blockquote>
 
 <p>Will output :</p>
@@ -307,12 +317,12 @@ __the content of your aside__
 &lt;/aside&gt;
 </br>
 </br>
-&lt;section class="<i>page_id</i>"&gt;
+&lt;main class="<i>page_id</i>"&gt;
 </br>
-__the content of your section__
+__the content of your main__
 </br>
 
-&lt;/section&gt;
+&lt;/main&gt;
 
 
 </blockquote>
@@ -356,6 +366,8 @@ __content of this page html element__
 </article>
 
 </section>
+
+</main>
 </body>
 
 <?php $this->stop('page') ?>

@@ -5,22 +5,24 @@
 abstract class Config
 {
 	protected static $arttable = 'mystore';
-	protected static $domain;
-	protected static $admin;
-	protected static $editor = 'editor';
-	protected static $invite;
-	protected static $read;
+	protected static $domain = '';
 	protected static $color4;
 	protected static $fontsize = 15;
 	protected static $basepath = '';
 	protected static $route404;
 	protected static $existnot = 'This page does not exist yet';
-	protected static $defaultbody = '%HEADER%'. PHP_EOL .PHP_EOL . '%NAV%'. PHP_EOL .PHP_EOL . '%ASIDE%'. PHP_EOL .PHP_EOL . '%SECTION%'. PHP_EOL .PHP_EOL . '%FOOTER%';
+	protected static $defaultbody = '%HEADER%'. PHP_EOL .PHP_EOL . '%NAV%'. PHP_EOL .PHP_EOL . '%ASIDE%'. PHP_EOL .PHP_EOL . '%MAIN%'. PHP_EOL .PHP_EOL . '%FOOTER%';
 	protected static $defaultart = '';
 	protected static $defaultfavicon = '';
 	protected static $showeditmenu = true;
-	protected static $editsymbol = 'pen';
-
+	protected static $editsymbol = 'pen';	
+	protected static $analytics = '';	
+	protected static $externallinkblank = true;
+	protected static $internallinkblank = false;
+	protected static $reccursiverender = true;
+	protected static $defaultprivacy = 0;
+	protected static $homepage = 'default';
+	protected static $homeredirect = null;
 
 
 // _______________________________________ F U N _______________________________________
@@ -75,6 +77,22 @@ abstract class Config
 		return (file_exists($path));
 	}
 
+	/**
+	 * Calculate Domain name
+	 */
+    public static function getdomain()
+    {
+        self::$domain = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+	}
+
+	/**
+	 * Verify Domain name
+	 */
+	public static function checkdomain()
+	{
+		return (self::$domain === $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']);
+	}
+
 // ________________________________________ G E T _______________________________________
 
 	public static function arttable()
@@ -85,26 +103,6 @@ abstract class Config
 	public static function domain()
 	{
 		return self::$domain;
-	}
-
-	public static function admin()
-	{
-		return self::$admin;
-	}
-
-	public static function editor()
-	{
-		return self::$editor;
-	}
-
-	public static function invite()
-	{
-		return self::$invite;
-	}
-
-	public static function read()
-	{
-		return self::$read;
 	}
 
 	public static function color4()
@@ -157,6 +155,41 @@ abstract class Config
 		return self::$editsymbol;
 	}
 
+	public static function analytics()
+	{
+		return self::$analytics;
+	}
+
+	public static function externallinkblank()
+	{
+		return self::$externallinkblank;
+	}
+
+	public static function internallinkblank()
+	{
+		return self::$internallinkblank;
+	}
+
+	public static function reccursiverender()
+	{
+		return self::$reccursiverender;
+	}
+
+	public static function defaultprivacy()
+	{
+		return self::$defaultprivacy;
+	}
+
+	public static function homepage()
+	{
+		return self::$homepage;
+	}
+
+	public static function homeredirect()
+	{
+		return self::$homeredirect;
+	}
+
 
 
 // __________________________________________ S E T ______________________________________
@@ -168,29 +201,7 @@ abstract class Config
 
 	public static function setdomain($domain)
 	{
-		self::$domain = strip_tags($domain);
-	}
-
-	public static function setadmin($admin)
-	{
-		if(is_string($admin) && strlen($admin) >= 4 && strlen($admin) <= 64) {
-			self::$admin = strip_tags($admin);
-		}
-	}
-
-	public static function seteditor($editor)
-	{
-		self::$editor = strip_tags($editor);
-	}
-
-	public static function setinvite($invite)
-	{
-		self::$invite = strip_tags($invite);
-	}
-
-	public static function setread($read)
-	{
-		self::$read = strip_tags($read);
+		self::$domain = strip_tags(strtolower($domain));
 	}
 
 	public static function setcolor4($color4)
@@ -267,6 +278,52 @@ abstract class Config
 		}
 	}
 
+	public static function setanalytics($analytics)
+	{
+		if(is_string($analytics) && strlen($analytics) < 25) {
+			self::$analytics = $analytics;
+		}
+	}
+	
+	public static function setexternallinkblank($externallinkblank)
+	{
+		self::$externallinkblank = boolval($externallinkblank);
+	}
+
+	public static function setinternallinkblank($internallinkblank)
+	{
+		self::$internallinkblank = boolval($internallinkblank);
+	}
+
+	public static function setreccursiverender($reccursiverender)
+	{
+		self::$reccursiverender = boolval($reccursiverender);
+	}
+
+	public static function setdefaultprivacy($defaultprivacy)
+	{
+		$defaultprivacy = intval($defaultprivacy);
+		if($defaultprivacy >= 0 && $defaultprivacy <= 2) {
+			self::$defaultprivacy = $defaultprivacy;
+		}
+	}
+
+	public static function sethomepage($homepage)
+	{
+		if(in_array($homepage, Model::HOMEPAGE)) {
+			self::$homepage = $homepage;
+		}
+	}
+
+	public static function sethomeredirect($homeredirect)
+	{
+		if(is_string($homeredirect) && strlen($homeredirect) > 0) {
+			self::$homeredirect = idclean($homeredirect);
+		} else {
+			self::$homeredirect = null;
+		}
+	}
+	
 
 
 

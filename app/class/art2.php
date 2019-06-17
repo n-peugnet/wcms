@@ -15,14 +15,15 @@ class Art2
 	protected $javascript;
 	protected $body;
 	protected $header;
-	protected $section;
+	protected $main;
 	protected $nav;
 	protected $aside;
 	protected $footer;
+	protected $externalcss;
+	protected $externalscript;
 	protected $renderhead;
 	protected $renderbody;
 	protected $secure;
-	protected $invitepassword;
 	protected $interface;
 	protected $linkfrom;
 	protected $linkto;
@@ -31,17 +32,20 @@ class Art2
 	protected $templatejavascript;
 	protected $templateoptions;
 	protected $favicon;
+	protected $thumbnail;
+	protected $authors;
+	protected $invites;
+	protected $readers;
 	protected $affcount;
+	protected $visitcount;
 	protected $editcount;
+	protected $editby;
 
 
 	const LEN = 255;
-	const LENTEXT = 20000;
+	const LENTEXT = 2**20;
 	const SECUREMAX = 2;
-	const LENCOULEUR = 7;
-	const DEBUT = '(?id=';
-	const FIN = ')';
-	const TABS = ['section', 'css', 'header', 'body', 'nav', 'aside', 'footer', 'javascript'];
+	const TABS = ['main', 'css', 'header', 'body', 'nav', 'aside', 'footer', 'javascript'];
 	const VAR_DATE = ['date', 'datecreation', 'datemodif', 'daterender'];
 
 	  
@@ -83,24 +87,31 @@ class Art2
 		$this->setjavascript('');
 		$this->setbody('');
 		$this->setheader('');
-		$this->setsection('');
+		$this->setmain('');
 		$this->setnav('');
 		$this->setaside('');
 		$this->setfooter('');
+		$this->setexternalcss([]);
+		$this->setexternalscript([]);
 		$this->setrenderhead('');
 		$this->setrenderbody('');
-		$this->setsecure(3);
-		$this->setinvitepassword('invitepassword');
-		$this->setinterface('section');
+		$this->setsecure(Config::defaultprivacy());
+		$this->setinterface('main');
 		$this->setlinkfrom([]);
 		$this->setlinkto([]);
 		$this->settemplatebody('');
 		$this->settemplatecss('');
 		$this->settemplatejavascript('');
-		$this->settemplateoptions(['externalcss', 'externaljavascript', 'favicon', 'reccursive', 'quickcss']);
+		$this->settemplateoptions(['externalcss', 'externaljavascript', 'favicon', 'reccursivecss', 'quickcss']);
 		$this->setfavicon('');
+		$this->setthumbnail('');
+		$this->setauthors([]);
+		$this->setinvites([]);
+		$this->setreaders([]);
 		$this->setaffcount(0);
+		$this->setvisitcount(0);
 		$this->seteditcount(0);
+		$this->seteditby([]);
 	}
 
 
@@ -137,12 +148,20 @@ class Art2
 
 	public function title($type = 'string')
 	{
-		return $this->title;
+		if($type == 'sort') {
+			return strtolower($this->title);
+		} else {
+			return $this->title;
+		}
 	}
 
 	public function description($type = 'string')
 	{
-		return $this->description;
+		if($type == 'short' && strlen($this->description) > 15 ) {
+				return substr($this->description, 0, 15) . '.';
+		} else {
+			return $this->description;
+		}
 	}
 
 	public function tag($option = 'array')
@@ -242,9 +261,9 @@ class Art2
 		return $this->header;
 	}
 
-	public function section($type = 'string')
+	public function main($type = 'string')
 	{
-		return $this->section;
+		return $this->main;
 	}
 
 	public function nav($type = "string")
@@ -255,6 +274,16 @@ class Art2
 	public function aside($type = "string")
 	{
 		return $this->aside;
+	}
+
+	public function externalcss($type = "array")
+	{
+		return $this->externalcss;
+	}
+
+	public function externalscript($type = "array")
+	{
+		return $this->externalscript;
 	}
 
 	public function footer($type = "string")
@@ -281,7 +310,7 @@ class Art2
 		if ($type == 'string') {
 			if ($this->secure == 0) $secure = 'public';
 			if ($this->secure == 1) $secure = 'private';
-			if ($this->secure == 2) $secure = 'not published';
+			if ($this->secure == 2) $secure = 'not_published';
 			return $secure;
 		} else {
 			return $this->secure;
@@ -291,6 +320,11 @@ class Art2
 	public function invitepassword($type = 'string')
 	{
 		return $this->invitepassword;
+	}
+
+	public function readpassword($type = 'string')
+	{
+		return $this->readpassword;
 	}
 
 	public function interface($type = 'string')
@@ -321,6 +355,8 @@ class Art2
 			$linkto = $this->linkto;
 		} elseif ($option == 'sort') {
 			return count($this->linkto);
+		} elseif ($option == 'string') {
+			return implode(', ', $this->linkto);
 		}
 		return $linkto;
 
@@ -376,9 +412,34 @@ class Art2
 		return $this->favicon;
 	}
 
+	public function thumbnail($type = 'string')
+	{
+		return $this->thumbnail;
+	}
+
+	public function authors($type = 'array')
+	{
+		return $this->authors;
+	}
+
+	public function invites($type = 'array')
+	{
+		return $this->invites;
+	}
+
+	public function readers($type = 'array')
+	{
+		return $this->invites;
+	}
+
 	public function affcount($type = 'int')
 	{
 		return $this->affcount;
+	}
+
+	public function visitcount($type = 'int')
+	{
+		return $this->visitcount;
 	}
 
 	public function editcount($type = 'int')
@@ -386,6 +447,10 @@ class Art2
 		return $this->editcount;
 	}
 
+	public function editby($type = 'array')
+	{
+		return $this->editby;
+	}
 
 
 
@@ -394,7 +459,7 @@ class Art2
 
 	public function setid($id)
 	{
-		if (strlen($id) < self::LEN and is_string($id)) {
+		if (strlen($id) <= Model::MAX_ID_LENGTH and is_string($id)) {
 			$this->id = strip_tags(strtolower(str_replace(" ", "", $id)));
 		}
 	}
@@ -471,7 +536,7 @@ class Art2
 	public function setcss($css)
 	{
 		if (strlen($css) < self::LENTEXT and is_string($css)) {
-			$this->css = strip_tags(trim(strtolower($css)));
+			$this->css = trim(strtolower($css));
 		}
 	}
 
@@ -508,10 +573,10 @@ class Art2
 		}
 	}
 
-	public function setsection($section)
+	public function setmain($main)
 	{
-		if (strlen($section) < self::LENTEXT and is_string($section)) {
-			$this->section = $section;
+		if (strlen($main) < self::LENTEXT and is_string($main)) {
+			$this->main = $main;
 		}
 	}
 
@@ -526,6 +591,20 @@ class Art2
 	{
 		if (strlen($aside) < self::LENTEXT and is_string($aside)) {
 			$this->aside = $aside;
+		}
+	}
+
+	public function setexternalcss($externalcss)
+	{
+		if(is_array($externalcss)) {
+			$this->externalcss = array_values(array_filter($externalcss));
+		}
+	}
+
+	public function setexternalscript(array $externalscript)
+	{
+		if(is_array($externalscript)) {
+			$this->externalscript = array_values(array_filter($externalscript));
 		}
 	}
 
@@ -557,6 +636,13 @@ class Art2
 	{
 		if (is_string($invitepassword) && strlen($invitepassword) < self::LEN) {
 			$this->invitepassword = $invitepassword;
+		}
+	}
+
+	public function setreadpassword($readpassword)
+	{
+		if (is_string($readpassword) && strlen($readpassword) < self::LEN) {
+			$this->readpassword = $readpassword;
 		}
 	}
 
@@ -619,7 +705,7 @@ class Art2
 	public function settemplateoptions($templateoptions)
 	{
 		if(is_array($templateoptions)) {
-			$this->templateoptions = $templateoptions;
+			$this->templateoptions = array_values(array_filter($templateoptions));
 		}
 	}
 
@@ -627,6 +713,34 @@ class Art2
 	{
 		if (is_string($favicon)) {
 			$this->favicon = $favicon;
+		}
+	}
+
+	public function setthumbnail($thumbnail)
+	{
+		if (is_string($thumbnail)) {
+			$this->thumbnail = $thumbnail;
+		}
+	}
+
+	public function setauthors($authors)
+	{
+		if(is_array($authors)) {
+			$this->authors = array_values(array_filter($authors));
+		}
+	}
+
+	public function setinvites($invites)
+	{
+		if(is_array($invites)) {
+			$this->invites = array_values(array_filter($invites));
+		}
+	}
+
+	public function setreaders($readers)
+	{
+		if(is_array($readers)) {
+			$this->readers = array_values(array_filter($readers));
 		}
 	}
 
@@ -639,12 +753,28 @@ class Art2
 		}
 	}
 
+	public function setvisitcount($visitcount)
+	{
+		if (is_int($visitcount)) {
+			$this->visitcount = $visitcount;
+		} elseif (is_numeric($visitcount)) {
+			$this->visitcount = intval($visitcount);
+		}
+	}
+
 	public function seteditcount($editcount)
 	{
 		if (is_int($editcount)) {
 			$this->editcount = $editcount;
 		} elseif (is_numeric($editcount)) {
 			$this->editcount = intval($editcount);
+		}
+	}
+
+	public function seteditby($editby)
+	{
+		if(is_array($editby)) {
+			$this->editby = $editby;
 		}
 	}
 
@@ -662,11 +792,38 @@ class Art2
 		$this->affcount++;
 	}
 
+	public function addvisitcount()
+	{
+		$this->visitcount++;
+	}
+
 	public function updateedited()
 	{
 		$now = new DateTimeImmutable(null, timezone_open("Europe/Paris"));
 		$this->setdatemodif($now);
 		$this->addeditcount();
+	}
+
+	public function addauthor(string $id)
+	{
+		if(!in_array($id, $this->authors)) {
+			$this->authors[] = $id;
+		}
+	}
+
+	public function addeditby(string $id)
+	{
+		$this->editby[$id] = true;
+	}
+
+	public function removeeditby(string $id)
+	{
+		unset($this->editby[$id]);
+	}
+
+	public function iseditedby()
+	{
+		return count($this->editby) > 0;
 	}
 
 

@@ -60,7 +60,7 @@
 
     <ul>
     <li class="drop">
-    <span class="button" style="font-family: monospace; background-color: #7b97b9;" >User lvl : <?= $user->level() ?></span>
+    <span class="button" style="font-family: monospace; background-color: #7b97b9;" ><?= $user->id() ?> (<?= $user->level() ?>)</span>
     </li>
     <li class="drop">
     <a class="button"  href="<?= $this->url('home') ?>">home</a>
@@ -72,6 +72,7 @@
     <li class="drop">
     <form action="<?= $this->url('log') ?>" method="post">
     <input type="password" name="pass" id="loginpass" placeholder="password">
+    <input type="hidden" name="route" value="artread/">
     <input type="hidden" name="id" value="<?= $art->id() ?>">
     <input type="submit" name="log" value="login" id="button">
     </form>
@@ -82,6 +83,7 @@
     <li class="drop">
     <form action="<?= $this->url('log') ?>" method="post">
     <input type="hidden" name="id" value="<?= $art->id() ?>">
+    <input type="hidden" name="route" value="artread/">
     <input type="submit" name="log" value="logout" id="button">
     </form>
     </li>
@@ -89,7 +91,7 @@
 <?php } ?>
 
 
-<?php if($user->iseditor()  && $artexist) { ?>
+<?php if($canedit  && $artexist) { ?>
 
     <li class="drop">
     <a class="button" href="<?= $this->uart('artread/', $art->id()) ?>" target="_blank">display</a>

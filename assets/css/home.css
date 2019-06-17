@@ -2,20 +2,41 @@
     box-sizing: border-box;
 }
 
-div#options {
-    float: left;
+
+
+
+div#options, article#main {
+    min-width: 180px;
+    overflow-y: auto;
 }
 
-div#main {
-    display: inline-block;
+
+
+main.home {
+    display: flex;
 }
+
+main.home article#main {
+    width: 100%;
+}
+
+main.home div#main {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
 
 body {
     margin: 0;
     height: 100%;
-    background-color: lightgrey;
+    background-color: grey;
     font-family: monospace;
     font-size: 15px;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .menu {
@@ -27,6 +48,24 @@ body {
 
 
 
+h1, h2 {
+    margin: 0;
+    background-color: #7b97b9;
+    color: white;
+    padding: 0.1% 0.5%;
+    font-size: larger;
+}
+
+
+
+main.media div, main.home div#options, main.info nav, main article {
+    border: ridge 1px dimgrey;
+    margin: 1%;
+    background-color: lightgrey;
+}
+
+
+
 tr:hover {
     background-color: grey;
     color: white;
@@ -34,9 +73,9 @@ tr:hover {
 
 #topbar {
     background-color: #7b97b9;
-    position: fixed;
     width: 100%;
     padding: 3px 0.5%;
+    border-bottom: solid 1px dimgrey;
 }
 
 #topbar form {
@@ -52,10 +91,6 @@ a:hover {
     color: white;
 }
 
-div#massedit {
-    display: none;
-}
-
 #options ul {
     list-style: none;
     padding-inline-start: 0;
@@ -66,18 +101,33 @@ th {
     color: black;
 }
 
-section {
-    padding-top: 30px;
-    margin: 0 0.5%;
+main {
+    overflow-y: auto;
 }
 
-section.admin input, select, textarea {
+main.admin input, select, textarea {
     display: block;
     width: 100%;
-    max-width: 400px;
 }
 
-section.font input, select, textarea {
+main section {
+    max-width: 800px;
+    margin: 1%;
+}
+
+
+div.checkbox [type="checkbox"] {
+    display: inline-block;
+    width: auto;
+}
+
+
+div.radio input[type="radio"] {
+    display: inline-block;
+    width: auto;
+}
+
+main.font input, select, textarea {
     display: block;
 }
 
@@ -97,12 +147,12 @@ span#search {
 #topbar input[type="text"], #topbar input[type="password"] {width: 100px;}
 
 
-section.font table#fontlist {
+main.font table#fontlist {
     width: 100%;
     max-width: 500px;
 }
 
-section.media table#medialist {
+main.media table#medialist {
     width: 100%;
     max-width: 960px;
 }
@@ -111,100 +161,218 @@ section.media table#medialist {
     text-decoration: underline;
 }
 
-section.media table#faviconlist {
+main.media table#faviconlist {
     width: 100%;
     max-width: 640px;
 }
 
-section.info ul i {
+main.info ul i {
     color: grey;
 }
 
-section.info a {
+main.info a {
     text-decoration: underline white;
 }
 
-section.info ul {
+main.info ul {
     list-style: none;
     padding-inline-start: 10px;
 }
 
-section.info code, section.info blockquote {
+main.info code, main.info blockquote {
     color: white;
     background-color: #191919;
     width: fit-content;
 }
 
-section.info article {
-    max-width: 800px;
-    text-align: justify;
-    background-color: #e2e1e1;
-    margin: 1%;
-    padding: 1%;
-}
-
-section.info blockquote i {
+main.info blockquote i {
     font-style: normal;
     color: #7b97b9;
 }
 
 
-section.info article h2#manual {
+main.info article h2#manual {
     text-align: center;
     font-size: 40px;
 }
 
-section.info article h3 {
+main.info article#manual h3 {
     border-bottom: solid 1px grey;
     margin-top: 100px;
     padding-top: 15px;
     font-size: 35px;
 }
 
-section.info article h4 {
+main.info article h4 {
     background-color: darkgrey;
     padding: 10px;
     font-size: x-large;
     margin-top: 70px;
 }
 
-section.info article h5 {
+main.info article h5 {
     text-transform: uppercase;
     margin-top: 45px;
     font-size: large;
 }
 
-section.info code {
+main.info code {
     padding: 0 4px;
 }
 
-section.info blockquote {
+main.info blockquote {
     padding: 6px 12px;
     text-align: left;
     word-break: break-all;
 }
 
-section.info nav {
+main.info nav {
     position: fixed;
-    right: 3%;
-    top: 20%;
-    margin: 7%;
+    left: 850px;
+    top: 0px;
+    margin-top: 50px;
 }
 
-section.info article code i {
+main.info article code i {
     font-style: normal;
     color: #7b97b9;
 }
 
 
+main.media table#medialist img {
+    display: none;
+    position: absolute;
+    max-width: 400px;
+    max-height: 200px;
+    margin-left: 80px;
+    background-color: white;
+    padding: 1%;
+}
+
+main.media table#medialist .thumbnail:hover img {
+    display: block;
+}
+
+
+main.media form {
+    margin: 1%;
+}
+
+main.media div#tree, main.media div#explorer {
+    display: inline-grid;
+}
+
+main.media code {
+    color: #9cbfe8;
+    background-color: darkslategrey;
+    font-size: small;
+    padding: 1px;
+}
+
+
+
+td.code {
+    background-color: darkslategrey;
+}
+
+
+
+main.user table form {
+    display: inline-block;
+}
+
+
+
+
+
+
+
+
+
+main.timeline ul {
+    list-style: none;
+    padding-inline-start: 0;
+}
+
+
+li.self.user {
+    text-align: right;
+}
+
+main.timeline li.event .eline {
+    display: inline-block;
+    margin: 0;
+}
+
+
+
+main.timeline p.eline {
+    background-color: white;
+    border-radius: 10px;
+    padding: 3px 7px;
+    font-family: sans-serif;
+}
+
+
+
+main.timeline textarea#message {
+    width: 100%;
+    max-width: unset;
+}
+
+
+
+main.timeline article#live {
+    overflow-y: scroll;
+}
+
+main.timeline section {
+    display: flex;
+    flex-direction: column;
+}
+
+main.timeline {
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+}
+
+
+
+
+li.event:hover span.details {
+    display: inline;
+}
+
+span.details {
+    display: none;
+}
+
+main.timeline li.event {
+    margin: 7px;
+}
+
+
+
+
+
+
+
 
 @media (max-width: 600px) {
-    section.home .summary, section.home .linkfrom, section.home .linkto, section.home .delete, section.home .datecreation, section.home .date, section.home .log, section.home .secure, section.home .tag {
+    main.home .summary, main.home .linkfrom, main.home .linkto, main.home .delete, main.home .datecreation, main.home .date, main.home .log, main.home .secure, main.home .tag {
         display: none;
     }
 
-    section.info nav {
+    main.info nav {
         position: relative;
+        left: 0;
+        margin-top: 1%;
+    }
+
+    main.home div#options {
+        display: none;
     }
 
 }
+

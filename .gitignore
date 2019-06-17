@@ -8,3 +8,4 @@ vendor/*
 config.json
 error_log
 bin/*
+!README.md

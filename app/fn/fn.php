@@ -3,7 +3,7 @@
 
 function class_autoloader($class)
 {
-    require('.'. DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . strtolower($class) . '.php');
+    require('.'. DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . strtolower(str_replace('\\', DIRECTORY_SEPARATOR, $class)) . '.php');
 }
 
 
@@ -73,13 +73,28 @@ function arrayclean($input)
 function idclean(string $input)
 {	
 	$input = urldecode($input);
-	$search = ['é', 'à', 'è', 'ç', 'ù', 'ï', 'î', ' '];
+	$search =  ['é', 'à', 'è', 'ç', 'ù', 'ï', 'î', ' '];
 	$replace = ['e', 'a', 'e', 'c', 'u', 'i', 'i', '-'];
 	$input = str_replace($search, $replace, $input);
 
-	return preg_replace('%[^a-z0-9-_+]%', '', strtolower(trim($input)));
+	$input = preg_replace('%[^a-z0-9-_+]%', '', strtolower(trim($input)));
+
+	$input = substr($input, 0, Model::MAX_ID_LENGTH);
+
+	return $input;
 }
 
+
+function getversion()
+{
+	if(file_exists('composer.json')) {
+		$composer = json_decode(file_get_contents('composer.json'), true);
+		$version = $composer['version'];
+	} else {
+		$version = 'unknown';
+	}
+	return $version;
+}
 
 
 
@@ -118,6 +133,51 @@ function changekey($array, $oldkey, $newkey)
 	$keys[array_search($oldkey, $keys)] = $newkey;
 
 	return array_combine($keys, $array);
+}
+
+
+
+function compare($stringa, $stringb)
+{
+	$arraya = explode(PHP_EOL, $stringa);
+	$arrayb = explode(PHP_EOL, $stringb);
+
+	$lnb = -1;
+	$commonlines = [];
+	foreach ($arraya as $na => $linea) {
+		$found = false;
+		foreach ($arrayb as $nb => $lineb) {
+			if($linea === $lineb && $nb > $lnb && !$found && !empty($linea)) {
+				$commonlines[$na] = $nb;
+				$merge[] = $arrayb[$nb];
+				$lnb = $nb;
+				$found = true;
+			}
+		}
+	}
+
+
+	$merge = [];
+	$lnb = 0;
+	foreach ($arraya as $na => $linea) {
+		if(array_key_exists($na, $commonlines)) {
+			for ($j=$lnb; $j <= $commonlines[$na]; $j++) { 
+					$merge[] = $arrayb[$j];
+			}
+			$lnb = $j;
+		} else {
+			$merge[] = $arraya[$na];
+		}
+	}
+	for ($k=$lnb; ; $k++) { 
+		if(array_key_exists($k, $arrayb)) {
+			$merge[] = $arrayb[$k];
+		} else {
+			break;
+		}
+	}
+
+	return implode(PHP_EOL, $merge);
 }
 
 

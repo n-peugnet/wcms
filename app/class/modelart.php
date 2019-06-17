@@ -2,7 +2,7 @@
 class Modelart extends Modeldb
 {
 
-	const SELECT = ['title', 'id', 'description', 'tag', 'date', 'datecreation', 'datemodif', 'daterender', 'css', 'quickcss', 'javascript', 'body', 'header', 'section', 'nav', 'aside', 'footer', 'render', 'secure', 'invitepassword', 'interface', 'linkfrom', 'linkto', 'template', 'affcount', 'editcount'];
+	const SELECT = ['title', 'id', 'description', 'tag', 'date', 'datecreation', 'datemodif', 'daterender', 'css', 'quickcss', 'javascript', 'body', 'header', 'main', 'nav', 'aside', 'footer', 'render', 'secure', 'invitepassword', 'interface', 'linkfrom', 'linkto', 'template', 'affcount', 'editcount'];
 	const BY = ['datecreation', 'title', 'id', 'description', 'datemodif', 'secure'];
 	const ORDER = ['DESC', 'ASC'];
 
@@ -10,28 +10,39 @@ class Modelart extends Modeldb
 	public function __construct()
 	{
 		parent::__construct();
+		$this->storeinit(Config::arttable());
 	}
 
-
-
-	public function exist(Art2 $art)
+	public function getlister()
 	{
-		$artdata = $this->artstore->get($art->id());
-		if ($artdata === false) {
-			return false;
-		} else {
-			return true;
+		$artlist = [];
+		$list = $this->repo->findAll();
+		foreach ($list as $artdata) {
+			$artlist[$artdata->id] = new Art2($artdata);
 		}
-
+		return $artlist;
 	}
 
+
+	public function getlisterid(array $idlist = [])
+	{
+		$artdatalist = $this->repo->query()
+		->where('__id', 'IN', $idlist)
+		->execute();
+
+		$artlist = [];
+		foreach ($artdatalist as $id => $artdata) {
+			$artlist[$id] = new Art2($artdata);
+		}
+		return $artlist;
+	}
 
 	public function add(Art2 $art)
 	{
 
 		$artdata = new \JamesMoss\Flywheel\Document($art->dry());
 		$artdata->setId($art->id());
-		$this->artstore->store($artdata);
+		$this->repo->store($artdata);
 	}
 
 
@@ -41,7 +52,7 @@ class Modelart extends Modeldb
 			$id = $id->id();
 		}
 		if (is_string($id)) {
-			$artdata = $this->artstore->findById($id);
+			$artdata = $this->repo->findById($id);
 			if ($artdata !== false) {
 				return new Art2($artdata);
 			} else {
@@ -52,6 +63,31 @@ class Modelart extends Modeldb
 		}
 	}
 
+	/**
+	 * Transform File to Art2 Oject
+	 * 
+	 * @return false|Art2 
+	 */
+	public function getfromfile()
+	{
+		if(!isset($_FILES['pagefile']) || $_FILES['pagefile']['error'] > 0 ) return false;
+
+		$ext = substr(strrchr($_FILES['pagefile']['name'],'.'),1);
+		if($ext !== 'json') return false;
+
+		$files = $_FILES;
+
+		$json = file_get_contents($_FILES['pagefile']['tmp_name']);
+		$pagedata = json_decode($json, true);
+
+		if($pagedata === false) return false;
+
+		$page = new Art2($pagedata);
+
+		return $page;
+
+	}
+
 	public function getartelement($id, $element)
 	{
 		if (in_array($element, Model::TEXT_ELEMENTS)) {
@@ -59,14 +95,14 @@ class Modelart extends Modeldb
 			if ($art !== false) {
 				return $art->$element();
 			} else {
-				return '';
+				return false;
 			}
 		}
 	}
 
 	public function delete(Art2 $art)
 	{
-		$this->artstore->delete($art->id());
+		$this->repo->delete($art->id());
 		$this->unlink($art->id());
 	}
 
@@ -85,8 +121,35 @@ class Modelart extends Modeldb
 	{
 		$artdata = new \JamesMoss\Flywheel\Document($art->dry());
 		$artdata->setId($art->id());
-		$this->artstore->store($artdata);
+		$this->repo->store($artdata);
 	}
+
+	public function combine(Art2 $arta, Art2 $artb)
+	{
+		$mergeart = $arta;
+		$merge = [];
+		$diff = [];
+			foreach ($arta::TABS as $element) {
+				if($arta->$element() !== $artb->$element()) {
+					$merge[$element] = compare($arta->$element(), $artb->$element());
+					$diff[] = $element;
+				}
+			}
+		$mergeart->hydrate($merge);
+
+		return ['diff' => $diff, 'mergeart' => $mergeart];
+	}
+
+	// public function diffartelement(Art2 $arta, Art2 $artb)
+	// {
+	// 	$diff = [];
+	// 	foreach ($arta::TABS as $element) {
+	// 		if($arta->$element() !== $artb->$element()) {
+	// 			$diff[] = $element;
+	// 		}
+	// 	}
+	// 	return $diff;
+	// }
 
 	public function artcompare($art1, $art2, $method = 'id', $order = 1)
 	{
@@ -132,6 +195,29 @@ class Modelart extends Modeldb
 					}
 				} elseif ($tagcompare == 'AND') {
 					if (!array_diff($tagchecked, $art->tag('array'))) {
+						$filteredlist[] = $art->id();
+					}
+				}
+			}
+		}
+		return $filteredlist;
+	}
+
+	public function filterauthorfilter(array $artlist, array $authorchecked, $authorcompare = 'OR')
+	{
+
+		$filteredlist = [];
+		foreach ($artlist as $art) {
+			if (empty($authorchecked)) {
+				$filteredlist[] = $art->id();
+			} else {
+				$inter = (array_intersect($art->authors('array'), $authorchecked));
+				if ($authorcompare == 'OR') {
+					if (!empty($inter)) {
+						$filteredlist[] = $art->id();
+					}
+				} elseif ($authorcompare == 'AND') {
+					if (!array_diff($authorchecked, $art->authors('array'))) {
 						$filteredlist[] = $art->id();
 					}
 				}

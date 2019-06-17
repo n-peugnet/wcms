@@ -1,27 +1,46 @@
 
-    <h2>Help !</h2>
-    <p>To save your article, press the HOME, UPDATE, or DISPLAY buttons. You can use the keyboard shortcuts as well.</p>
-    <pre><span class="i">ALT + W</span> : home</pre>
-    <pre><span class="i">ALT + X</span> : update</pre>
-    <pre><span class="i">ALT + C</span> : display</pre>
-    <h3>Markdown</h3>
-    <p>The html section use <a href="https://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown encoding</a>. Actualy, W is using Michel Fortin's <a href="https://michelf.ca/projects/php-markdown/extra/" target="_blank">Markdown Extra</a>.</p>
-    <h3>Links</h3>
-    <pre>[text](=<span class="i">article_id</span>)</pre>
-    <p>where article_id is the article's id you want to point to.</p>
-    <h3>Images</h3>
-    <pre>[altimage](/<span class="i">img_id.extension</span>)</pre>
-    <p>Where img_id is the id of your image and its extension.</p>
-    <h3>Shortcuts</h3>
-    <pre>%TITLE%</pre>
-    <p>Show the title of your article.</p>
-    <pre>%DESCRIPTION%</pre>
-    <p>Show the description of your article.</p>
-    <pre>%SUMMARY%</pre>
-    <p>Generate a <strong>summary</strong>, the list of all your head titles using #, ##, ###...</p>
-    <pre>%%<span class="i">tag_name</span>%%</pre>
-    <p>Generate a <strong>menu</strong>, a list of links to all articles under this tag.</p>
-    <p>vv</p>
-    <p>vv</p>
-    <p>vv</p>
-    <p></p>
+
+    <h4>update shortcut</h4>
+    <kbd>CTRL</kbd> + <kbd>S</kbd>
+    <h4>Markdown synthax</h4>
+    <ul>
+    <li><code>[<i>hello</i>](<i>PAGE_ID</i>)</code>link</li>
+    <li><code>![<i>alt</i>](<i>imagepath</i>)</code>img</li>
+    <li><code><<i>e@mail.net</i>></code></li>
+    <li><code># <i>h</i>* <i>title</i></code></li>
+    <li><code>*<i>emphasis</i>*</code></li>
+    <li><code>**<i><b>strong</b></i>**</code></li>
+    <li><code>- <i>list item</i></code></li>
+    <li><code>><i>blockquote</i></code></li>
+    <li><code>    <i>code</i></code></li>
+    <li><code>------</code>horizontal line</li>
+    </ul>
+    <h4>W synthax</h4>
+    <ul>
+    <li><code>[<i>PAGE_ID</i>]</code>quick link</li>
+    <li><code>%TITLE%</code>page title</li>
+    <li><code>%DESCRIPTION%</code>page desc'</li>
+    <li><code>%DATE%</code>date of page</li>
+    <li><code>%TIME%</code>time of page</li>
+    <li><code>%SUMMARY%</code>Summary</li>
+    <li><code>===<i>id</i></code>article separator</li>
+    <li><code>%TAG:<i>tag</i>%</code>page list by <i>tag</i></li>
+    <li><code>%MEDIA:<i>dir</i>%</code>media list</li>
+    <li><code>%LINK%<i>text</i>%LINK%</code>auto link</li>
+    </ul>
+
+    <h4>BODY synthax</h4>
+    <ul>
+    <li><code>%<i>ELEMENT</i>%</code>invoke page element</li>
+    <li><code>%<i>ELEMENT</i>:<i>page_id</i>%</code>invoke element of specific page</li>
+    <li>You cant use Markdown in the BODY</li>
+    </ul>
+
+
+    <h4>More infos</h4>
+
+    <ul>
+    <li><a href="<?= $this->url('info') ?>" target="_blank">📕 W Manual</a></li>
+    <li><a href="https://daringfireball.net/projects/markdown/syntax" target="_blank">📏 Markdown encoding</a></li>
+    <li><a href="https://michelf.ca/projects/php-markdown/extra/" target="_blank">📐 Markdown Extra</a></li>
+    </ul>

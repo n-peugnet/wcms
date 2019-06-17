@@ -14,28 +14,44 @@ There is a lots of possibilites of creations, for people who need to create mult
 - Editor interface, the only place where where you can see the master-plan.
 
 
-There is 3 levels of privacy :
+Overview
+--------
 
-0. public
-1. reader : resctricted by reader code (read only)
-2. non published : editor and admin only
+You can access your home following the root folder you've instaled **W**. After connecting, you can see your editor interface.
 
-And 4 levels of users :
+![home](https://w-cms.top/gif/home.jpg)
 
-1. Reader
-2. Invite
-3. Editor
-4. Administrator
+Quickly edit pages as if you where taking notes. You need to connect as editor, then just type `../edit` at the end of the page you want to edit ot use the menu.
 
-[Webpage of the project (in french)](http://vincent.club1.fr/w/?id=w)
+![edit](https://w-cms.top/gif/edit.jpg)
+
+Then you can se the result.
+
+![read](https://w-cms.top/gif/read.jpg)
+
+There is lot more you can by altering the `BODY`.
+
+![advanced](https://w-cms.top/gif/advanced.jpg)
+
+
+
+[Old webpage of the project (in french)](http://vincent.club1.fr/w/?id=w)
 
 
 # Technology
 
-- Pure PHP.
-- Use MarkDown to edit articles.
-- Intelligent link analysis.
-- Easy to manage Json files database.
+- almost pure PHP.
+- Use MarkDown to edit pages quickly.
+- Easy to manage Json 'flat file' database.
 
 using [James Moss's Flywheel Database](https://github.com/jamesmoss/flywheel), [Michel Fortin's Markdown Extra](https://github.com/michelf/php-markdown) and [Plates](https://github.com/thephpleague/plates) as lightweight template engine.
 
+
+
+To Do
+=====
+
+
+- Implement Code Mirror as editing interface instead of basic text area
+- Locking page system by super editor to prevent editing by the wrong person
+- use AJAX request !!

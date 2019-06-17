@@ -8,11 +8,7 @@
 <style>.tabs textarea{font-size: <?= Config::fontsize() ?>px}</style>
 
 <body>
-<section class="editor">
-
-    <!-- <?php $this->insert('navart', ['user' => $user, 'art' => $art, 'artexist' => $artexist]) ?> -->
-
-
+<main class="editor">
 
     <?php $this->insert('edittopbar', ['art' => $art, 'user' => $user]) ?>
 
@@ -20,13 +16,18 @@
 
     <?php $this->insert('editleftbar', ['art' => $art, 'tablist' => $tablist, 'artlist' => $artlist, 'showleftpanel' => $showleftpanel, 'faviconlist' => $faviconlist]) ?>
     <?php $this->insert('edittabs', ['tablist' => $tablist, 'opentab' => $art->interface(), 'templates' => $art->template()]) ?>
-    <?php $this->insert('editrightbar', ['art' => $art, 'artlist' => $artlist, 'showrightpanel' => $showrightpanel, 'templates' => $art->template(), 'tagartlist' => $tagartlist, 'lasteditedartlist' => $lasteditedartlist]) ?>
+    <?php $this->insert('editrightbar', ['art' => $art, 'artlist' => $artlist, 'showrightpanel' => $showrightpanel, 'templates' => $art->template(), 'tagartlist' => $tagartlist, 'lasteditedartlist' => $lasteditedartlist, 'editorlist' => $editorlist, 'user' => $user]) ?>
 
     </div>
 
 </form>
 
-</section>
+</main>
+
+<script>
+    const artid = '<?= $art->id() ?>';
+</script>
+<script src="<?= Model::jspath() ?>edit.js"></script>
 </body>
 
 <?php $this->stop('page') ?>

@@ -63,7 +63,40 @@
         </ul>
         
     </details>
-   
+
+        <h3>Authors</h3>
+
+
+    <?php if($user->level() >= 4) { ?>
+
+
+    <label for="authors">Invites editors</label>
+    <select name="authors[]" id="authors">
+    <option value="" selected>--add author--</option>
+    <?php
+    $notyetauthorlist = array_diff($editorlist, $art->authors());
+        foreach ($notyetauthorlist as $author) {
+            echo '<option value="'.$author.'" >'.$author.'</option>';
+        }
+    }
+    ?>
+
+    </select>
+    <?php
+        $alreadyauthorlist = array_intersect($editorlist, $art->authors());
+        foreach ($alreadyauthorlist as $author) {
+            ?>
+            <div class="checkexternal">
+            <?php if($user->level() >= 4) { ?>
+            <input type="checkbox" name="authors[]" id="<?= $author ?>" value="<?= $author ?>" checked>
+            <?php } ?>
+            <label for="<?= $author ?>" >⬗ <?= $author ?></label>
+            </div>
+            <?php
+        }
+        ?>
+    
+
     </div>
 
 </div>
