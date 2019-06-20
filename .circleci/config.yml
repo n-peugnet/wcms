@@ -15,6 +15,8 @@ executors:
       # - image: circleci/mysql:5.7-ram
       #
       # - image: redis:2.8.19
+orbs:
+  codecov: codecov/codecov@1.0.2
 
 jobs:
   test:
@@ -37,9 +39,11 @@ jobs:
             - ./vendor
 
       # run tests with phpunit or codecept
-      #- run: ./vendor/bin/phpunit
-      #- run: ./vendor/bin/codecept build
-      #- run: ./vendor/bin/codecept run
+      - run: phpdbg -qrr vendor/bin/phpunit tests --coverage-clover ~/phpunit/coverage.xml
+      - store_artifacts:
+          path: ~/phpunit
+      - codecov/upload:
+          file: ~/phpunit/coverage.xml
 
   lint:
     executor: standard
