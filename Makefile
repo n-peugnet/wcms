@@ -37,6 +37,9 @@ assets/js/%.bundle.js: src/%.js js_dependencies
 	mkdir -p $(dir $@)
 	webpack --env prod
 
+.env:
+	cp .default.env .env
+
 php_dependencies:
 	@echo "Installing PHP dependencies..."
 	composer install --no-dev --prefer-dist
